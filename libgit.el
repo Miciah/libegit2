@@ -49,9 +49,10 @@
 
 On successful exit, pass control on to the build step."
   (make-directory libgit--build-dir 'parents)
-  (let ((default-directory libgit--build-dir))
+  (let ((default-directory libgit--build-dir)
+        (cmake (or (locate-file "cmake3" exec-path exec-suffixes 1) "cmake")))
     (set-process-sentinel
-     (start-process "libgit-cmake" "*libgit build*" "cmake" "..")
+     (start-process "libgit-cmake" "*libgit build*" cmake "..")
      (lambda (proc _event)
        (when (eq 'exit (process-status proc))
          (if (= 0 (process-exit-status proc))
